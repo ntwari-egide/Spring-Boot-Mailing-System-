@@ -1,12 +1,20 @@
 package com.ntwarispringboot.mail.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MailConfiguration {
+    @Value("${spring.mail.host}")
     private String host;
+
+    @Value("${spring.mail.port}")
     private int port;
+
+    @Value("${spring.mail.username}")
     private String username;
+
+    @Value("${spring.mail.password}")
     private String password;
 
     public MailConfiguration(String host, int port, String username, String password) {
