@@ -9,10 +9,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.mail.internet.MimeMessage;
 import javax.xml.bind.ValidationException;
@@ -30,6 +27,11 @@ public class FeedbackController {
 
     @Autowired
     private JavaMailSender mailSender;
+
+    @GetMapping("/verifying")
+    public String herokuVerification(){
+        return "Heroku deployment is working";
+    }
     @PostMapping
     public String sendFeedback(@RequestBody Message message, BindingResult bindingResult) throws Exception {
         System.out.println(mailConfiguration.getHost());
