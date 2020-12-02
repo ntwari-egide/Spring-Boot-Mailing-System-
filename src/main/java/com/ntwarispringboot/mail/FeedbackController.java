@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,36 +29,48 @@ public class FeedbackController {
     @Autowired
     private JavaMailSender mailSender;
     @PostMapping
-    public void sendFeedback(@RequestBody FeedBack feedBack, BindingResult bindingResult) throws Exception {
+    public String sendFeedback(@RequestBody FeedBack feedBack, BindingResult bindingResult) throws Exception {
         System.out.println(mailConfiguration.getHost());
         if(bindingResult.hasErrors())
             throw new ValidationException("Feedback is not valid");
 
         //create an email instance , working
 
-//        SimpleMailMessage mailMessage = new SimpleMailMessage();
-//        mailMessage.setFrom(feedBack.getEmail());
-//        mailMessage.setTo("ntwariegide2003@gmail.com");
-//        mailMessage.setSubject("New Image sent in java from "+feedBack.getName());
-//        mailMessage.setText("My new java learning form tutorial teach java primes youtube tutorial");
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setFrom(feedBack.getEmail());
+        mailMessage.setTo("ntwariegide2003@gmail.com");
+        mailMessage.setSubject("New Image sent in java from "+feedBack.getName());
+        mailMessage.setText("My new java learning form tutorial teach java primes youtube tutorial");
 
-        // sending the attachment
-        // tre = mutipart message
+        // send the mail
+
+        mailSender.send(mailMessage);
+
+        return "Email sent";
+
+    }
+
+    @PostMapping("/attachment")
+    public String sendingEmailAndAttachment() throws Exception{
         MimeMessage mailMessage = mailSender.createMimeMessage();
+
+//         sending the attachment
+//         tre = multipart message
         MimeMessageHelper helper = new MimeMessageHelper(mailMessage,true);
         helper.setTo("ntwariegide2003@gmail.com");
         helper.setSubject("Email Attaching file");
         helper.setText(
                 "<h1>Email Attachment : Yombi rwanda</h1>" +
-                "Enjoy the videos and music you love, upload original content, and share it all with friends, family, and the world on YouTube" +
-                "<button>Click me</button>");
+                        "Enjoy the videos and music you love, upload original content, and share it all with friends, family, and the world on YouTube" +
+                        "<button>Click me</button>");
 
         FileSystemResource file = new FileSystemResource(new File("C:/Users\\user\\Desktop\\shapes.png"));
 
-        helper.addAttachment("shapes.png", file);
+        helper.addAttachment("attachment.png", file);
+
         // send the mail
 
         mailSender.send(mailMessage);
-
+        return"Email and attachment Sent";
     }
 }
