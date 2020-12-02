@@ -52,11 +52,12 @@ public class FeedbackController {
 
     }
 
-    public String sendHtmlContentEmail(String name){
+    public String sendHtmlContentEmail(String name,String smallContent){
         return "<h1 style='font-family: Manrope;'>Hello "+name+", welcome back</h2>"+
                 "<p>This is the simple way of testing html in <b>Java</b> , by accessing the emails from many sources on enternet</p>"+
                 "<p style='font-size: 23px;'>Your verification code is 239392 </p>"+
-                "<button>Visit Site<button>";
+                "<p style='font-size: 17px;'>Small content <br /> "+smallContent+" </p>"+
+                "<button>Visit Site</button>";
     }
 
     @PostMapping("/attachment")
@@ -70,7 +71,7 @@ public class FeedbackController {
         helper.setSubject(messageAttachment.getSubject());
 //        helper.setText(messageAttachment.getContent());
 
-        helper.setText(sendHtmlContentEmail(messageAttachment.getRecieverEmail()),true);
+        helper.setText(sendHtmlContentEmail(messageAttachment.getRecieverEmail(),messageAttachment.getContent()),true);
 
         FileSystemResource file = new FileSystemResource(new File(String.valueOf(messageAttachment.getAttachment())));
 
@@ -79,6 +80,7 @@ public class FeedbackController {
         // send the mail
 
         mailSender.send(mailMessage);
+
         return"Email and attachment Sent";
     }
 }
