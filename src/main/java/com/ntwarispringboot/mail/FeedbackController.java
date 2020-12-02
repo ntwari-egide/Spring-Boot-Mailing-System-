@@ -18,7 +18,6 @@ import javax.mail.internet.MimeMessage;
 import javax.xml.bind.ValidationException;
 import java.io.File;
 import java.time.LocalDate;
-import java.util.Date;
 
 @RestController
 @RequestMapping("/feedback")
@@ -53,6 +52,13 @@ public class FeedbackController {
 
     }
 
+    public String sendHtmlContentEmail(String name){
+        return "<h1 style='font-family: Manrope;'>Hello "+name+", welcome back</h2>"+
+                "<p>This is the simple way of testing html in <b>Java</b> , by accessing the emails from many sources on enternet</p>"+
+                "<p style='font-size: 23px;'>Your verification code is 239392 </p>"+
+                "<button>Visit Site<button>";
+    }
+
     @PostMapping("/attachment")
     public String sendingEmailAndAttachment(@RequestBody MessageAttachment messageAttachment) throws Exception{
         MimeMessage mailMessage = mailSender.createMimeMessage();
@@ -62,9 +68,9 @@ public class FeedbackController {
         MimeMessageHelper helper = new MimeMessageHelper(mailMessage,true);
         helper.setTo(messageAttachment.getRecieverEmail());
         helper.setSubject(messageAttachment.getSubject());
-        helper.setText(messageAttachment.getContent());
+//        helper.setText(messageAttachment.getContent());
 
-//        helper.setText("<h1>Added new h1 html element</h1>");
+        helper.setText(sendHtmlContentEmail(messageAttachment.getRecieverEmail()),true);
 
         FileSystemResource file = new FileSystemResource(new File(String.valueOf(messageAttachment.getAttachment())));
 
