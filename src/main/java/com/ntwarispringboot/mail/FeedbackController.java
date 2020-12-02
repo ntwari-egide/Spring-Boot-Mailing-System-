@@ -64,6 +64,8 @@ public class FeedbackController {
         helper.setSubject(messageAttachment.getSubject());
         helper.setText(messageAttachment.getContent());
 
+        helper.setText("<h1>Added new h1 html element</h1>");
+
         FileSystemResource file = new FileSystemResource(new File(String.valueOf(messageAttachment.getAttachment())));
 
         helper.addAttachment(messageAttachment.getAttachment().getName() + " - "+ LocalDate.now()+".png", file);
