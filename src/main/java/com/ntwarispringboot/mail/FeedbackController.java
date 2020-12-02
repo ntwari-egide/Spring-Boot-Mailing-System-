@@ -2,6 +2,7 @@ package com.ntwarispringboot.mail;
 
 import com.ntwarispringboot.mail.config.MailConfiguration;
 import com.ntwarispringboot.mail.models.Message;
+import com.ntwarispringboot.mail.models.MessageAttachment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.mail.internet.MimeMessage;
 import javax.xml.bind.ValidationException;
 import java.io.File;
+import java.time.LocalDate;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/feedback")
@@ -51,22 +54,19 @@ public class FeedbackController {
     }
 
     @PostMapping("/attachment")
-    public String sendingEmailAndAttachment() throws Exception{
+    public String sendingEmailAndAttachment(@RequestBody MessageAttachment messageAttachment) throws Exception{
         MimeMessage mailMessage = mailSender.createMimeMessage();
 
 //         sending the attachment
 //         tre = multipart message
         MimeMessageHelper helper = new MimeMessageHelper(mailMessage,true);
-        helper.setTo("ntwariegide2003@gmail.com");
-        helper.setSubject("Email Attaching file");
-        helper.setText(
-                "<h1>Email Attachment : Yombi rwanda</h1>" +
-                        "Enjoy the videos and music you love, upload original content, and share it all with friends, family, and the world on YouTube" +
-                        "<button>Click me</button>");
+        helper.setTo(messageAttachment.getRecieverEmail());
+        helper.setSubject(messageAttachment.getSubject());
+        helper.setText(messageAttachment.getContent());
 
-        FileSystemResource file = new FileSystemResource(new File("C:/Users\\user\\Desktop\\shapes.png"));
+        FileSystemResource file = new FileSystemResource(new File(String.valueOf(messageAttachment.getAttachment())));
 
-        helper.addAttachment("attachment.png", file);
+        helper.addAttachment(messageAttachment.getAttachment().getName() + " - "+ LocalDate.now()+".png", file);
 
         // send the mail
 
