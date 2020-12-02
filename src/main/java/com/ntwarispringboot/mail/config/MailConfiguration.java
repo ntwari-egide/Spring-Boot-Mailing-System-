@@ -17,12 +17,6 @@ public class MailConfiguration {
     @Value("${spring.mail.password}")
     private String password;
 
-    public MailConfiguration(String host, int port, String username, String password) {
-        this.host = host;
-        this.port = port;
-        this.username = username;
-        this.password = password;
-    }
 
     public String getHost() {
         return host;
