@@ -1,7 +1,7 @@
 package com.ntwarispringboot.mail;
 
 import com.ntwarispringboot.mail.config.MailConfiguration;
-import com.ntwarispringboot.mail.models.FeedBack;
+import com.ntwarispringboot.mail.models.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
@@ -29,7 +29,7 @@ public class FeedbackController {
     @Autowired
     private JavaMailSender mailSender;
     @PostMapping
-    public String sendFeedback(@RequestBody FeedBack feedBack, BindingResult bindingResult) throws Exception {
+    public String sendFeedback(@RequestBody Message message, BindingResult bindingResult) throws Exception {
         System.out.println(mailConfiguration.getHost());
         if(bindingResult.hasErrors())
             throw new ValidationException("Feedback is not valid");
@@ -37,10 +37,10 @@ public class FeedbackController {
         //create an email instance , working
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setFrom(feedBack.getEmail());
-        mailMessage.setTo("ntwariegide2003@gmail.com");
-        mailMessage.setSubject("New Image sent in java from "+feedBack.getName());
-        mailMessage.setText("My new java learning form tutorial teach java primes youtube tutorial");
+        mailMessage.setFrom(mailConfiguration.getUsername());
+        mailMessage.setTo(message.getRecieverEmail());
+        mailMessage.setSubject(message.getSubject());
+        mailMessage.setText(message.getContent());
 
         // send the mail
 
